@@ -1,1 +1,24 @@
-
+services:
+  - type: web
+    name: amazon-refund-portal
+    runtime: python
+    repo: https://github.com/SAHIL-YADAV-CODER/app.git
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: TELEGRAM_BOT_TOKEN
+        value:8793157012:AAE5B3bRXtphn2JhLaM9I-SCupDiq1E4g7U
+        sync: false
+      - key: ADMIN_CHAT_ID
+        value:8725194109
+        sync: false
+      - key: BOT_USERNAME
+        value:@pcmoroo_bot
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true
