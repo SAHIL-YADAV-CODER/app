@@ -11,9 +11,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
 # Telegram Configuration
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
-ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID', '')
-BOT_USERNAME = os.environ.get('BOT_USERNAME', 'AmazonRefunderBot')
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8793157012:AAE5B3bRXtphn2JhLaM9I-SCupDiq1E4g7U')
+ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID', '8725194109')
+BOT_USERNAME = os.environ.get('BOT_USERNAME', 'pcmoroo_bot')
 
 # In-memory storage
 user_sessions = {}
