@@ -23,7 +23,7 @@ Session(app)
 
 # Telegram Configuration (from environment variables)
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8793157012:AAE5B3bRXtphn2JhLaM9I-SCupDiq1E4g7U')
-ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID', '')
+ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID', '8725194109')
 BOT_USERNAME = os.environ.get('BOT_USERNAME', '@pcmoroo_bot')
 WEBHOOK_URL = os.environ.get('RENDER_EXTERNAL_URL', 'https://your-app.onrender.com')
 
