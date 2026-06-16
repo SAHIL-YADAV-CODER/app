@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
 # Telegram Configuration
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8793157012:AAE5B3bRXtphn2JhLaM9I-SCupDiq1E4g7U')
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8793157012:AAFztkkVTrB6VjabVieW76_xurpRRdZ0p-E')
 ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID', '8725194109')
 BOT_USERNAME = os.environ.get('BOT_USERNAME', 'pcmoroo_bot').lstrip('@')
 RENDER_URL = os.environ.get('RENDER_EXTERNAL_URL', 'https://app-277n.onrender.com')
