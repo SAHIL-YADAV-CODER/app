@@ -211,17 +211,27 @@ LOG_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
 
-# Configure root logger
+# Create logs directory
+os.makedirs('logs', exist_ok=True)
+
+# Configure handlers
+handlers = [
+    logging.StreamHandler(sys.stdout),
+    logging.FileHandler('logs/app.log')
+]
+
+# Add error file handler separately
+error_handler = logging.FileHandler('logs/errors.log')
+error_handler.setLevel(logging.ERROR)
+handlers.append(error_handler)
+
 logging.basicConfig(
     level=getattr(logging, APP_LOG_LEVEL.upper(), logging.INFO),
     format=LOG_FORMAT,
     datefmt=LOG_DATE_FORMAT,
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('logs/app.log'),
-        logging.FileHandler('logs/errors.log', level=logging.ERROR)
-    ]
+    handlers=handlers
 )
+
 
 logger = logging.getLogger(__name__)
 
